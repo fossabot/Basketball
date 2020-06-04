@@ -1,12 +1,10 @@
 extends KinematicBody
 
-var posPlayer = get_global_transform()
-
 var gravity =15
 var jump = 12
 var capncrunch = Vector3()
 var velocity = Vector3()
-onready var camera
+var camera
 var anim_player
 var character
 var robot = true
@@ -15,18 +13,6 @@ const ACCELERATION =3
 const DE_ACCELERATION = 5
 
 var success = false
-
-func track_time_button():
-	var button_time = 2
-	if Input.is_action_just_pressed("jump"):
-		$HoldTime.start(button_time)
-	if button_time > 2:
-		$HoldTime.stop()
-		if success:
-			$AnimationPlayer.play("Robot_Death")
-			robot = false
-			success = false
-
 
 func _on_timer_timeout():
 	success = true
@@ -40,7 +26,7 @@ func _ready():
 	
 func _physics_process(delta):
 	if robot == true:
-		camera = get_node("../Camera").get_global_transform()
+		camera = get_parent().get_node("target").get_global_transform()
 		var is_moving = false
 		var dir = Vector3()
 		if Input.is_action_pressed("move_fw"):
@@ -68,7 +54,6 @@ func _physics_process(delta):
 			$AnimationPlayer.play("Robot_Jump")
 		if Input.is_action_pressed("jump"):
 			$AnimationPlayer.play_backwards("Robot_Jump")
-			track_time_button()
 		if Input.is_action_just_released("jump") and is_on_floor():
 			capncrunch.y = jump
 			$AnimationPlayer.play("Robot_Jump")

@@ -4942,6 +4942,3 @@ anims/Robot_WalkJump = SubResource( 26 )
 anims/Robot_Walking = SubResource( 27 )
 anims/Robot_Wave = SubResource( 28 )
 anims/Robot_Yes = SubResource( 29 )
-
-[node name="HoldTime" type="Timer" parent="."]
-one_shot = true
