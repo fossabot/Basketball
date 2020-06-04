@@ -14,7 +14,6 @@ const DE_ACCELERATION = 5
 
 var success = false
 
-
 func _ready():
 	camera = get_node("../Camera").get_global_transform()
 func _physics_process(delta):
