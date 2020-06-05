@@ -1,6 +1,6 @@
 extends Camera
-export var distance = 7.0
-export var height = 4.0
+export var distance = 10.0
+export var height = 5.0
 
 # Declare member variables here. Examples:
 # var a = 2

@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/000 alp basket mnt.obj-1d004183a2ced3c06adfd3b540e30f15.mesh"
+
+[deps]
+
+files=[ "res://.import/000 alp basket mnt.obj-1d004183a2ced3c06adfd3b540e30f15.mesh" ]
+
+source_file="res://000 alp basket mnt.obj"
+dest_files=[ "res://.import/000 alp basket mnt.obj-1d004183a2ced3c06adfd3b540e30f15.mesh", "res://.import/000 alp basket mnt.obj-1d004183a2ced3c06adfd3b540e30f15.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

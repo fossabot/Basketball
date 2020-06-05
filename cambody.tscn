@@ -11,9 +11,11 @@ script = ExtResource( 2 )
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 3 )
 current = true
-fov = 110.0
+fov = 30.0
+near = 30.0
+far = 200.0
 script = ExtResource( 1 )
-height = 3.0
+height = 2.0
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = SubResource( 1 )
