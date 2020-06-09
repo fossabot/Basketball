@@ -20,6 +20,11 @@ run/main_scene="res://level.tscn"
 boot_splash/image="res://splashscreen1.png"
 boot_splash/use_filter=false
 
+[display]
+
+window/size/width=600
+window/size/height=1024
+
 [input]
 
 move_fw={

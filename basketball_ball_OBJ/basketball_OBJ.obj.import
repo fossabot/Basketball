@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/basketball_OBJ.obj-69df5d3b66b237cb28ea8038b006be09.mesh"
+
+[deps]
+
+files=[ "res://.import/basketball_OBJ.obj-69df5d3b66b237cb28ea8038b006be09.mesh" ]
+
+source_file="res://basketball_ball_OBJ/basketball_OBJ.obj"
+dest_files=[ "res://.import/basketball_OBJ.obj-69df5d3b66b237cb28ea8038b006be09.mesh", "res://.import/basketball_OBJ.obj-69df5d3b66b237cb28ea8038b006be09.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

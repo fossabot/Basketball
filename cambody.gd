@@ -1,7 +1,7 @@
 extends KinematicBody
 
 var gravity =15
-var jump = 12
+var jump = 16
 var capncrunch = Vector3()
 var velocity = Vector3()
 var camera
@@ -10,7 +10,7 @@ var character
 var robot = true
 var SPEED = 10
 const ACCELERATION =3
-const DE_ACCELERATION = 5
+const DE_ACCELERATION = 1
 
 var success = false
 

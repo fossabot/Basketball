@@ -8,5 +8,5 @@ transform = Transform( 30, 0, 0, 0, 30, 0, 0, 0, 30, 0, 0, 0 )
 [node name="rig" parent="." index="0"]
 transform = Transform( 100, 0, 0, 0, -1.19209e-05, 100, 0, -100, -1.19209e-05, 0, 0, 0 )
 
-[node name="DEF-head_end" parent="rig/ORG-head_end" index="0"]
+[node name="Plane001" parent="rig" index="1"]
 visible = false
