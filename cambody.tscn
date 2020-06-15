@@ -1,22 +1,30 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Camera.gd" type="Script" id=1]
 [ext_resource path="res://cambody.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleMesh" id=1]
 
+[sub_resource type="PrismMesh" id=2]
+
 [node name="target" type="KinematicBody"]
+transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 0, 0, 0 )
 script = ExtResource( 2 )
 
-[node name="Camera" type="Camera" parent="."]
+[node name="lol" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 3 )
-current = true
 fov = 30.0
-near = 30.0
-far = 200.0
+near = 45.0
+far = 170.0
 script = ExtResource( 1 )
 height = 2.0
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0628767, -0.0545759, 0.0191493 )
 mesh = SubResource( 1 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="MeshInstance"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, -1.86761 )
+mesh = SubResource( 2 )
 material/0 = null
