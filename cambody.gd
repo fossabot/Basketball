@@ -40,6 +40,7 @@ func _physics_process(delta):
 			dir += -camera.basis[2]
 			is_moving = true
 			SPEED = SPEED*0.714
+		
 		dir.y = 0
 		dir = dir.normalized()
 		var hv = velocity
@@ -61,5 +62,8 @@ func _physics_process(delta):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):gle
 #	pass
+
+func start():
+	set_global_transform(tppos)
 func _on_ball_out():
 	start()
