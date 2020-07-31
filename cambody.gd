@@ -14,13 +14,23 @@ const ACCELERATION =3
 const DE_ACCELERATION = 1
 signal pepe
 var success = false
-
-
+var ballout = false
+var startpos
+var startz
+var counter
+func _on_ball_out():
+	ballout = true
+var pos
 func _ready():
 	camera = get_node("lol").get_global_transform()
+	var character = get_node(".")
+	startpos = get_global_transform()
+func _process(delta):
+	pass
 func _physics_process(delta):
 	if robot == true:
 		SPEED = 10
+		pos = get_global_transform()
 		tppos = get_parent().get_node("Position3D2").get_global_transform()
 		var is_moving = false
 		var dir = Vector3()
@@ -40,7 +50,14 @@ func _physics_process(delta):
 			dir += -camera.basis[2]
 			is_moving = true
 			SPEED = SPEED*0.714
-		
+		if ballout == true:
+			if pos.origin.z > tppos.origin.z:
+				dir += camera.basis[2]
+				is_moving = true
+				SPEED =30
+			else:
+				ballout = false
+				SPEED = 0
 		dir.y = 0
 		dir = dir.normalized()
 		var hv = velocity
@@ -53,17 +70,4 @@ func _physics_process(delta):
 		velocity.x = hv.x
 		velocity.z = hv.z
 		velocity = move_and_slide(velocity, Vector3(0, 1, 0))	
-	#if not is_on_floor():
-		#$AnimationPlayer.play("Robot_Jump")
 
-	
-	
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):gle
-#	pass
-
-func start():
-	set_global_transform(tppos)
-func _on_ball_out():
-	start()

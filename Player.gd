@@ -17,21 +17,23 @@ const ACCELERATION =3
 const DE_ACCELERATION = 1
 signal out
 var success = false
-
+var direction = true
 func _on_timer_timeout():
 	success = true
 	if is_on_floor():
 		capncrunch.y = jump
-
+var hoop
+var distance
 func _ready():
-	#var tppos = get_parent().get_node("Position3D").get_global_transform()
+	var tppos = get_parent().get_node("Position3D").get_global_transform()
 	anim_player = get_node("AnimationPlayer")
 	character = get_node(".")
+	hoop = get_parent().get_node("hoop")
 	
 func _physics_process(delta):
 	if robot == true:
 		tppos = get_parent().get_node("Position3D").get_global_transform()
-		var pos = get_global_transform()
+		pos = get_global_transform()
 		camera = get_parent().get_node("target").get_global_transform()
 		var is_moving = false
 		var dir = Vector3()
@@ -39,21 +41,29 @@ func _physics_process(delta):
 			emit_signal("out")
 		if Input.is_action_pressed("move_fw"):
 			dir += -camera.basis[2]
+			direction = true
 			is_moving = true
 		if Input.is_action_pressed("move_bw"):
 			dir += camera.basis[2]
 			is_moving = true
+			direction = false
 		if Input.is_action_pressed("move_l"):
 			dir += -camera.basis[2]
 			dir += -camera.basis[0]
+			direction = true
 			is_moving = true
 		if Input.is_action_pressed("move_r"):
 			dir += -camera.basis[2]
 			dir += camera.basis[0]
+			direction = true
 			is_moving = true
 		dir.y = 0
 		dir = dir.normalized()
 		move_and_slide(capncrunch, Vector3.UP)
+		if direction == true and is_moving == true:
+			$AnimationPlayer.play("land")
+		if direction == false and is_moving == true:
+			$AnimationPlayer.play_backwards("land")
 		if is_on_floor():
 			capncrunch.y = jump
 			#$AnimationPlayer.play("land")
@@ -83,6 +93,9 @@ func _physics_process(delta):
 			capncrunch.y = -jump*2
 		if Input.is_action_pressed("throw_fw"):
 			dir += -camera.basis[2]
+		if Input.is_action_just_pressed("throw_fw"):
+			distance = character.global_transform.origin.distance_to(hoop.global_transform.origin)
+			print(distance)
 		if Input.is_action_just_pressed("throw_fw"):
 			capncrunch.y = jump *1.5
 		if Input.is_action_pressed("throw_l"):

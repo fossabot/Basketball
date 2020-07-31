@@ -20,6 +20,10 @@ run/main_scene="res://level.tscn"
 boot_splash/image="res://splashscreen1.png"
 boot_splash/use_filter=false
 
+[autoload]
+
+Level="*res://level.gd"
+
 [input]
 
 move_fw={
