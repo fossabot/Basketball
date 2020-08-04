@@ -20,6 +20,8 @@ var startz
 var counter
 func _on_ball_out():
 	ballout = true
+func _on_Spatial_restart():
+	ballout = true # Replace with function body.
 var pos
 func _ready():
 	camera = get_node("lol").get_global_transform()
@@ -34,7 +36,7 @@ func _physics_process(delta):
 		tppos = get_parent().get_node("Position3D2").get_global_transform()
 		var is_moving = false
 		var dir = Vector3()
-		if Input.is_action_pressed("move_fw"):
+		if Input.is_action_pressed("move_fw") or Input.is_action_pressed("throw_fw"):
 			dir += -camera.basis[2]
 			is_moving = true
 			SPEED = 10
@@ -70,4 +72,7 @@ func _physics_process(delta):
 		velocity.x = hv.x
 		velocity.z = hv.z
 		velocity = move_and_slide(velocity, Vector3(0, 1, 0))	
+
+
+
 
