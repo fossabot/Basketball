@@ -15,8 +15,9 @@ var anim_player
 var character
 var robot = true
 export var SPEED = 10
-const ACCELERATION =3
+const ACCELERATION = 3
 const DE_ACCELERATION = 1
+
 signal out
 var success = false
 var direction = true
@@ -41,19 +42,20 @@ func on_presstime_timeout():
 	$presstime.start()
 var shoot_angle
 func check_shoot_angle(pos):
-	if pos.origin.x < 10 and pos.origin.x > -10:
-		shoot_angle = "forward"
 	if pos.origin.x < -10:
-		shoot_angle = "left"
-	if pos.origin.x > 10:
-		shoot_angle = "right"
+		return "left"
+	else:
+		if pos.origin.x < 10:
+			return "forward"
+		else:
+			return "right"
 func _physics_process(delta):
+	tppos = get_parent().get_node("Position3D").get_global_transform()
+	pos = get_global_transform()
+	camera = get_parent().get_node("target").get_global_transform()
+	var is_moving = false
+	var dir = Vector3()
 	if state:
-		tppos = get_parent().get_node("Position3D").get_global_transform()
-		pos = get_global_transform()
-		camera = get_parent().get_node("target").get_global_transform()
-		var is_moving = false
-		var dir = Vector3()
 		if Input.is_action_just_pressed("ui_up"):
 			emit_signal("out")
 		if Input.is_action_pressed("move_fw"):
@@ -173,33 +175,74 @@ func _physics_process(delta):
 			character.set_rotation(char_rot)
 	#if not is_on_floor():
 	else:
+		move_and_slide(capncrunch, Vector3.UP)
 		if Input.is_action_pressed("throw_fw"):
 			presstime += delta
 		if Input.is_action_just_released("throw_fw"):
-			presstime = presstime
-			check_shoot_angle(pos)
+			#presstime = presstime
+			is_moving = true
+			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "forward":
 				ball_direction = true
+			else:
+				ball_direction = false
 			print(ball_direction)
 		if Input.is_action_pressed("throw_l"):
 			presstime += delta
 		if Input.is_action_just_released("throw_l"):
-			presstime = presstime
-			check_shoot_angle(pos)
+			#presstime = presstime
+			is_moving = true
+			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "left":
 				ball_direction = true
+			else:
+				ball_direction = false
 			print(ball_direction)
 		if Input.is_action_pressed("throw_r"):
 			presstime += delta
 		if Input.is_action_just_released("throw_r"):
-			presstime = presstime
-			check_shoot_angle(pos)
+			#presstime = presstime
+			is_moving = true
+			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "right":
 				ball_direction = true
+			else:
+				ball_direction = false
 			print(ball_direction)
+		if ball_direction == false:
+			if shoot_angle == "forward":
+				SPEED = 50
+				if not pos.origin.z == 22:
+					if pos.origin.y < 10:
+						capncrunch.y = jump
+					dir += -camera.basis[2]
+					if not is_on_floor():
+						capncrunch.y -= gravity * delta
+					
+					yield(get_tree(), "idle_frame")
+		dir.y = 0
+		dir = dir.normalized()
+		var hv = velocity
+		hv.y = 0
+		
+		var new_pos = dir * SPEED
+		var accel = DE_ACCELERATION
+		
+		if dir.dot(hv) > 0:
+			accel = ACCELERATION
+		
+		hv = hv.linear_interpolate(new_pos, accel * delta)
+		
+		velocity.x = hv.x
+		velocity.z = hv.z
+		
+		velocity = move_and_slide(velocity, Vector3(0, 1, 0))	
+		if is_moving:
+			var angle = atan2(hv.x, hv.z)
+			var char_rot = character.get_rotation()
 			
-	
-	
+			char_rot.y = angle
+			character.set_rotation(char_rot)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):gle
