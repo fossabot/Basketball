@@ -7,6 +7,7 @@ var capncrunch = Vector3()
 var velocity = Vector3()
 var camera
 var tppos
+var is_moving = false
 var presstime = 0
 func start():
 	set_global_transform(tppos)
@@ -60,37 +61,60 @@ func is_out(pos):
 func are_the_keys_just_pressed():
 	return Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("move_fw") or Input.is_action_just_pressed("move_l") or Input.is_action_just_pressed("move_r") or Input.is_action_just_pressed("move_bw")
 
+func is_shoot_pressed():
+	return Input.is_action_just_pressed("throw_fw")or Input.is_action_just_pressed("throw_l") or Input.is_action_just_pressed("throw_r")
+
+func set_moving_forward():
+	direction = true
+	is_moving = true
+
+func set_moving_backward():
+	direction = false
+	is_moving = true
+
+func move_forward(dir, camera):
+	return dir - camera.basis[2]
+	
+func move_back(dir, camera):
+	return dir + camera.basis[2]
+
+func move_left(dir, camera):
+	return dir - camera.basis[0]
+	
+func move_right(dir, camera):
+	return dir + camera.basis[0]
+
 func _physics_process(delta):
 	tppos = get_parent().get_node("Position3D").get_global_transform()
 	pos = get_global_transform()
 	camera = get_parent().get_node("target").get_global_transform()
-	var is_moving = false
+	is_moving = false
 	var dir = Vector3()
 	if state:
 		if Input.is_action_just_pressed("ui_up"):
 			emit_signal("out")
 		if Input.is_action_pressed("move_fw"):
-			dir += -camera.basis[2]
-			direction = true
-			is_moving = true
+			dir = move_forward(dir, camera)
+			set_moving_forward()
+		
 		if Input.is_action_pressed("move_bw"):
-			dir += camera.basis[2]
-			is_moving = true
-			direction = false
+			dir = move_back(dir, camera)
+			set_moving_backward()
+		
 		if Input.is_action_pressed("move_l"):
-			dir += -camera.basis[2]
-			dir += -camera.basis[0]
-			direction = true
-			is_moving = true
+			dir = move_forward(dir, camera)
+			dir = move_left(dir, camera)
+			set_moving_forward()
+		
 		if Input.is_action_pressed("move_r"):
-			dir += -camera.basis[2]
-			dir += camera.basis[0]
-			direction = true
-			is_moving = true
+			dir = move_forward(dir, camera)
+			dir = move_right(dir, camera)
+			set_moving_forward()
+		
 		dir.y = 0
 		dir = dir.normalized()
 		move_and_slide(capncrunch, Vector3.UP)
-		if direction  and is_moving:
+		if direction and is_moving:
 			$AnimationPlayer.play("land")
 		if not direction and is_moving:
 			$AnimationPlayer.play_backwards("land")
@@ -106,16 +130,7 @@ func _physics_process(delta):
 			if are_the_keys_just_pressed():
 				capncrunch.y = -jump*2
 		
-		if Input.is_action_just_pressed("throw_fw"):
-			distance = character.global_transform.origin.distance_to(hoop.global_transform.origin)
-			print(distance)
-			state = false
-		elif Input.is_action_just_pressed("throw_l"):
-			distance = character.global_transform.origin.distance_to(hoop.global_transform.origin)
-			print(distance)
-			state = false
-		
-		elif Input.is_action_just_pressed("throw_r"):
+		if is_shoot_pressed():
 			distance = character.global_transform.origin.distance_to(hoop.global_transform.origin)
 			print(distance)
 			state = false
