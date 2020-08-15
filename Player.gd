@@ -1,5 +1,5 @@
 extends KinematicBody
-var state = true
+var is_dribbling = true
 var pos = get_global_transform()
 var gravity =90
 var jump = 40
@@ -7,6 +7,7 @@ var capncrunch = Vector3()
 var velocity = Vector3()
 var camera
 var tppos
+var will_ball_score = false
 var is_moving = false
 var presstime = 0
 func start():
@@ -23,7 +24,7 @@ signal out
 var success = false
 var direction = true
 var is_timeout = false
-var ball_direction = false
+var is_ball_moving_forward = false
 func _on_timer_timeout():
 	success = true
 	if is_on_floor():
@@ -41,7 +42,9 @@ func _ready():
 func on_presstime_timeout():
 	presstime += 0.1
 	$presstime.start()
+
 var shoot_angle
+
 func check_shoot_angle(pos):
 	if pos.origin.x < -10:
 		return "left"
@@ -50,6 +53,7 @@ func check_shoot_angle(pos):
 			return "forward"
 		else:
 			return "right"
+
 func handle_ball_out():
 	emit_signal("out")
 	start()
@@ -83,6 +87,15 @@ func move_left(dir, camera):
 	
 func move_right(dir, camera):
 	return dir + camera.basis[0]
+	
+var currently_pressed_button
+var button_pressed_time
+
+func handle_press_timing(button):
+	pass
+	# if cbutton == urrently pressed:
+	# add to presstime
+	# else handle presstime and reset it
 
 func _physics_process(delta):
 	tppos = get_parent().get_node("Position3D").get_global_transform()
@@ -90,9 +103,10 @@ func _physics_process(delta):
 	camera = get_parent().get_node("target").get_global_transform()
 	is_moving = false
 	var dir = Vector3()
-	if state:
+	if is_dribbling:
 		if Input.is_action_just_pressed("ui_up"):
 			emit_signal("out")
+			
 		if Input.is_action_pressed("move_fw"):
 			dir = move_forward(dir, camera)
 			set_moving_forward()
@@ -133,7 +147,7 @@ func _physics_process(delta):
 		if is_shoot_pressed():
 			distance = character.global_transform.origin.distance_to(hoop.global_transform.origin)
 			print(distance)
-			state = false
+			is_dribbling = false
 		
 		var hv = velocity
 		hv.y = 0
@@ -163,46 +177,42 @@ func _physics_process(delta):
 		if Input.is_action_pressed("throw_fw"):
 			presstime += delta
 		if Input.is_action_just_released("throw_fw"):
-			#presstime = presstime
 			is_moving = true
 			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "forward":
-				ball_direction = true
+				will_ball_score = true
 			else:
-				ball_direction = false
-			print(ball_direction)
+				will_ball_score = false
+			print(will_ball_score)
 		if Input.is_action_pressed("throw_l"):
 			presstime += delta
 		if Input.is_action_just_released("throw_l"):
-			#presstime = presstime
 			is_moving = true
 			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "left":
-				ball_direction = true
+				will_ball_score = true
 			else:
-				ball_direction = false
-			print(ball_direction)
+				will_ball_score = false
+			print(will_ball_score)
 		if Input.is_action_pressed("throw_r"):
 			presstime += delta
 		if Input.is_action_just_released("throw_r"):
-			#presstime = presstime
 			is_moving = true
 			shoot_angle = check_shoot_angle(pos)
 			if shoot_angle == "right":
-				ball_direction = true
+				will_ball_score = true
 			else:
-				ball_direction = false
-			print(ball_direction)
-		if ball_direction == false:
+				will_ball_score = false
+			print(will_ball_score)
+		if not will_ball_score:
 			if shoot_angle == "forward":
 				SPEED = 50
 				if not pos.origin.z < 22:
 					if pos.origin.y < 10:
 						capncrunch.y = jump
-					dir += -camera.basis[2]
+					dir -= camera.basis[2]
 					if not is_on_floor():
 						capncrunch.y -= gravity * delta
-					
 					yield(get_tree(), "idle_frame")
 		dir.y = 0
 		dir = dir.normalized()
